@@ -7,7 +7,7 @@ from train_v1 import CNN
 from train_v2 import Model
 
 
-DEVICE = "mps" if torch.backends.mps.is_available() else "cpu"
+DEVICE = "cuda" if torch.backends.mps.is_available() else "cpu"
 SAMPLE_RATE = 16000
 NUM_SAMPLES = SAMPLE_RATE * 4
 N_MELS = 64
