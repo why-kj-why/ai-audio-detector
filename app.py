@@ -2,14 +2,11 @@ import streamlit as st
 import torch
 import torchaudio
 import io
-
 from transformers import Wav2Vec2Processor
 from train_v1 import CNN
 from train_v2 import Model
 
-# =========================
-# CONFIG
-# =========================
+
 DEVICE = "mps" if torch.backends.mps.is_available() else "cpu"
 SAMPLE_RATE = 16000
 NUM_SAMPLES = SAMPLE_RATE * 4
@@ -20,9 +17,7 @@ st.set_page_config(page_title="AI Voice Detector", layout="centered")
 st.title("🎙️ AI Voice Detector")
 st.write("Detect whether an audio clip is REAL or AI GENERATED")
 
-# =========================
-# LOAD MODELS (cached)
-# =========================
+
 @st.cache_resource
 def load_models():
     cnn = CNN().to(DEVICE)
@@ -44,9 +39,7 @@ mel_transform = torchaudio.transforms.MelSpectrogram(
     n_mels=N_MELS
 )
 
-# =========================
-# AUDIO PROCESSING
-# =========================
+
 def load_audio_bytes(audio_bytes):
     waveform, sr = torchaudio.load(io.BytesIO(audio_bytes))
 
@@ -62,9 +55,7 @@ def load_audio_bytes(audio_bytes):
 
     return waveform
 
-# =========================
-# PREDICTION
-# =========================
+
 def predict(waveform):
     # CNN
     mel = torch.log(mel_transform(waveform) + 1e-9)
@@ -80,9 +71,7 @@ def predict(waveform):
 
     return (p1 + p2) / 2
 
-# =========================
-# UI
-# =========================
+
 uploaded_file = st.file_uploader(
     "Upload an audio file",
     type=["mp3", "wav", "opus", "flac"]
