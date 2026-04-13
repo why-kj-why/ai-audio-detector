@@ -5,9 +5,11 @@ import io
 from transformers import Wav2Vec2Processor
 from train_v1 import CNN
 from train_v2 import Model
+import librosa
+import numpy as np
 
 
-DEVICE = "cuda" if torch.backends.mps.is_available() else "cpu"
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 SAMPLE_RATE = 16000
 NUM_SAMPLES = SAMPLE_RATE * 4
 N_MELS = 64
@@ -40,19 +42,37 @@ mel_transform = torchaudio.transforms.MelSpectrogram(
 )
 
 
+# def load_audio_bytes(audio_bytes):
+#     waveform, sr = torchaudio.load(io.BytesIO(audio_bytes))
+
+#     if sr != SAMPLE_RATE:
+#         waveform = torchaudio.transforms.Resample(sr, SAMPLE_RATE)(waveform)
+
+#     waveform = waveform.mean(dim=0, keepdim=True)
+
+#     if waveform.shape[1] < NUM_SAMPLES:
+#         waveform = torch.nn.functional.pad(waveform, (0, NUM_SAMPLES - waveform.shape[1]))
+#     else:
+#         waveform = waveform[:, :NUM_SAMPLES]
+
+#     return waveform
+
+
 def load_audio_bytes(audio_bytes):
-    waveform, sr = torchaudio.load(io.BytesIO(audio_bytes))
+    # Load with librosa (works on Streamlit Cloud)
+    waveform, sr = librosa.load(io.BytesIO(audio_bytes), sr=SAMPLE_RATE, mono=True)
 
-    if sr != SAMPLE_RATE:
-        waveform = torchaudio.transforms.Resample(sr, SAMPLE_RATE)(waveform)
+    # Convert to torch tensor
+    waveform = torch.tensor(waveform).unsqueeze(0)
 
-    waveform = waveform.mean(dim=0, keepdim=True)
-
+    # Pad / trim
     if waveform.shape[1] < NUM_SAMPLES:
-        waveform = torch.nn.functional.pad(waveform, (0, NUM_SAMPLES - waveform.shape[1]))
+        pad = NUM_SAMPLES - waveform.shape[1]
+        waveform = torch.nn.functional.pad(waveform, (0, pad))
     else:
         waveform = waveform[:, :NUM_SAMPLES]
 
+    waveform = waveform / (waveform.abs().max() + 1e-9)
     return waveform
 
 
