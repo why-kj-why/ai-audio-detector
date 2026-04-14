@@ -102,7 +102,7 @@ if uploaded_file is not None:
 
     audio_bytes = uploaded_file.read()
 
-    with st.spinner("Analyzing audio..."):
+    with st.spinner("Analysing audio..."):
         waveform = load_audio_bytes(audio_bytes)
         score = predict(waveform)
 
