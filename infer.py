@@ -1,6 +1,7 @@
 import torch
 import torchaudio
 import os
+import pandas as pd
 from sklearn.metrics import accuracy_score, f1_score, confusion_matrix
 from transformers import Wav2Vec2Processor
 from train_v1 import CNN
@@ -90,7 +91,10 @@ for cls in os.listdir(ROOT_DIR):
             score = predict(waveform)
             pred = 1 if score > 0.5 else 0
 
-            results.append((file, label, pred, score))
+            # filename without extension
+            filename = os.path.splitext(file)[0]
+
+            results.append((filename, label, pred, score))
 
             print(f"{file}")
             print(f"  True: {label} | Pred: {pred} | Score: {score:.3f}")
@@ -98,6 +102,7 @@ for cls in os.listdir(ROOT_DIR):
 
         except Exception as e:
             print(f"Skipping {file}: {e}")
+
 
 
 y_true = [r[1] for r in results]
@@ -116,3 +121,20 @@ print(f"Accuracy: {acc:.4f}")
 print(f"F1 Score: {f1:.4f}")
 print(f"TP: {tp}, TN: {tn}, FP: {fp}, FN: {fn}")
 print(f"FPR: {fpr:.4f}, FNR: {fnr:.4f}, Recall: {recall:.4f}")
+
+
+def label_to_text(label):
+    return "REAL" if label == 0 else "SYNTHETIC"
+
+csv_data = [
+    {
+        "filename": r[0],
+        "actual_value": label_to_text(r[1]),
+        "predicted_value": label_to_text(r[2]),
+        "confidence_score": r[3]
+    }
+    for r in results
+]
+
+df = pd.DataFrame(csv_data)
+df.to_csv("test_results.csv", index=False)
