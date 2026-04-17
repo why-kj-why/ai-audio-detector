@@ -131,7 +131,7 @@ csv_data = [
         "filename": r[0],
         "actual_value": label_to_text(r[1]),
         "predicted_value": label_to_text(r[2]),
-        "confidence_score": r[3]
+        "confidence_score": round(r[3], 3)
     }
     for r in results
 ]
