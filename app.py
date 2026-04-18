@@ -59,13 +59,9 @@ mel_transform = torchaudio.transforms.MelSpectrogram(
 
 
 def load_audio_bytes(audio_bytes):
-    # Load with librosa (works on Streamlit Cloud)
     waveform, sr = librosa.load(io.BytesIO(audio_bytes), sr=SAMPLE_RATE, mono=True)
-
-    # Convert to torch tensor
     waveform = torch.tensor(waveform).unsqueeze(0)
 
-    # Pad / trim
     if waveform.shape[1] < NUM_SAMPLES:
         pad = NUM_SAMPLES - waveform.shape[1]
         waveform = torch.nn.functional.pad(waveform, (0, pad))
@@ -77,6 +73,7 @@ def load_audio_bytes(audio_bytes):
 
 
 def predict(waveform):
+    
     # CNN
     mel = torch.log(mel_transform(waveform) + 1e-9)
     mel = mel.unsqueeze(0).to(DEVICE)
@@ -92,10 +89,7 @@ def predict(waveform):
     return (p1 + p2) / 2
 
 
-uploaded_file = st.file_uploader(
-    "Upload an audio file",
-    type=["mp3", "wav", "opus", "flac"]
-)
+uploaded_file = st.file_uploader("Upload an audio file", type=["mp3", "wav", "opus", "flac"])
 
 if uploaded_file is not None:
     st.audio(uploaded_file)
@@ -110,12 +104,13 @@ if uploaded_file is not None:
 
     if score > 0.5:
         st.error("AI GENERATED")
+        output_score = score
     else:
         st.success("REAL")
+        output_score = 1.0 - score
 
-    st.write(f"**Confidence Score:** {score:.3f}")
+    st.write(f"**Confidence Score:** {output_score:.3f}")
 
-    # Optional interpretation
     if score > 0.75:
         st.warning("High confidence of synthetic voice")
     elif score > 0.5:
