@@ -79,11 +79,11 @@ Forkers can evaluate the ensemble model on their own data, using the `infer.py` 
 ```
 ./test-set
    /real
-      real_1.opus (true negative)
-      real_2.opus (false positive)
+      real_1.opus       (true negative)
+      real_2.opus       (false positive)
    /synthetic
-      synthetic_1.mp3 (true positive)
-      synthetic_2.opus (false negative)
+      synthetic_1.mp3   (true positive)
+      synthetic_2.opus  (false negative)
 ```
 
 ### Web Application
