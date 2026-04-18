@@ -75,7 +75,16 @@ which combines:
 * spectral learning (CNN)
 * temporal + semantic learning (wav2vec2)
 
-Forkers can evaluate the ensemble model on their own data, using the `infer.py` script.
+Forkers can evaluate the ensemble model on their own data, using the `infer.py` script. Alternatively, forkers can also evaluate the system against the audio files provided in this repository. These files are described as follows:
+```
+./test-set
+   /real
+      real_1.opus (true negative)
+      real_2.opus (false positive)
+   /synthetic
+      synthetic_1.mp3 (true positive)
+      synthetic_2.opus (false negative)
+```
 
 ### Web Application
 
