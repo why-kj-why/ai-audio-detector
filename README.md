@@ -90,23 +90,23 @@ The Streamlit web interface allows users to:
 ## Evaluation
 
 Real-world evaluation of the system was performed on a custom test set comprising:
-* 25 real audio samples (YouTube videos, WhatsApp voice notes)
-* 26 AI-generated samples (custom ElevenLabs voices)
+* 26 real audio samples (YouTube videos, WhatsApp voice notes)
+* 28 AI-generated samples (custom ElevenLabs voices)
 
 where the REAL audio files are considered negative samples, while the SYNTHETIC files are considered positive. The evaluation results can be found in the `test_results.csv` file.
 
 ### Observations
 
-* <u>Accuracy</u>: 92.16%
-* <u>F1 Score</u>: 92.59%
+* <u>Accuracy</u>: 92.59%
+* <u>F1 Score</u>: 93.10%
 * <u>Confusion Matrix</u>:
 ```
-TP: 25    FN: 1
-FP: 3     TN: 22
+TP: 27    FN: 1
+FP: 3     TN: 23
 ```
-* <u>False Positive Rate</u>: 12%
-* <u>False Negative Rate</u>: 3.85%
-* <u>Recall</u>: 96.15%
+* <u>False Positive Rate</u>: 11.54%
+* <u>False Negative Rate</u>: 3.57%
+* <u>Recall</u>: 96.43%
 
 ### Inferences
 
