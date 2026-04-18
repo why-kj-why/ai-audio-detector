@@ -3,8 +3,8 @@ import torch
 import torchaudio
 import io
 from transformers import Wav2Vec2Processor
-from train_v1 import CNN
-from train_v2 import Model
+from train_cnn import CNN
+from finetune_wav2vec2 import Model
 import librosa
 import numpy as np
 
