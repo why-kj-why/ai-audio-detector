@@ -65,7 +65,7 @@ ROOT_DIR = "./test-set"
 
 label_map = {
     "real": 0,
-    "elevenlabs": 1
+    "synthetic": 1
 }
 
 results = []
